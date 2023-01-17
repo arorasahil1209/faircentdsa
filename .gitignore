@@ -4,3 +4,4 @@ log
 .jshintrc
 uploads
 package-lock.json
+node_modules
