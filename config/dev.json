@@ -1,0 +1,36 @@
+{
+  "port": 3001,
+  "hostAddress": "http://localhost:3001/",
+  "web": "https://neo.fintech.com/",
+  "databaseHost": "mongodb+srv://neodev:FQVcK7wAzH1FWXfw@dev-neodb.xkccw.mongodb.net/neo_backend_dev?retryWrites=true&w=majority",
+  "databasePort": "27017",
+  "databaseUser": "root",
+  "databasePassword": "neofintech",
+  "databaseName": "neo_fintech",
+  "jwtsecret": "ilovescotchscotchyscotchscotch",
+  "jwtOptions": {
+    "expiresIn": "1h"
+  },
+  "swaggerDefinition": {
+    "info": {
+      "title": "Neo Fintech",
+      "version": "1.0",
+      "description": "Neo Fintech API Docs"
+    },
+    "basePath": "/v0",
+    "securityDefinitions": {
+      "tokenauth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "faircentApi": {
+    "url": "https://fcnode11.faircent.com/v1/api",
+    "x-application-id": "b6419f1a493a09e21aae9de583f0d9dd",
+    "x-application-name": "FAIRCENT",
+    "content-type": "application/json"
+  
+}
+}

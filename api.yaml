@@ -1,0 +1,34 @@
+definitions:
+  securitySchemes:
+    tokenauth:
+      type: basic
+      description: bearer auth
+      name: Authorization
+      in: header
+    demouser:
+      type: basic
+
+  Response:
+    type: object
+    properties:
+      user_name:
+        type: string
+      message:
+        type: string
+      is_deleted:
+        type: string
+      is_active:
+        type: string
+      created_at:
+        type: string
+      updated_at:
+        type: string
+
+  Data:
+    type: object
+
+  EncryptedData:
+    type: object
+    properties:
+      encrypted_data:
+        type: string

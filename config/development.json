@@ -1,0 +1,29 @@
+{
+  "port": 3001,
+  "hostAddress": "http://172.32.3.101:3001/",
+  "web": "https://neo.fintech.com/",
+  "databaseHost": "mongodb+srv://neodev:FQVcK7wAzH1FWXfw@dev-neodb.xkccw.mongodb.net/neo_backend_dev?retryWrites=true&w=majority",
+  "databasePort": "27017",
+  "databaseUser": "root",
+  "databasePassword": "neofintech",
+  "databaseName": "neo_fintech",
+  "jwtsecret": "ilovescotchscotchyscotchscotch",
+  "jwtOptions": {
+    "expiresIn": "1h"
+  },
+  "swaggerDefinition": {
+    "info": {
+      "title": "DSA Pro",
+      "version": "1.0",
+      "description": "DSA Pro API Docs"
+    },
+    "basePath": "/v0",
+    "securityDefinitions": {
+      "tokenauth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  }
+}
