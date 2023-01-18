@@ -1,5 +1,7 @@
 const sequelize= require('sequelize');
+let {httpReqequest} = require('../services/faircent.services');
 const db = require('../models');
+let Config =require('../config/dev.json');
 const Users =  db.users; 
 const centUser = db.centUser;
 const centLoan = db.centLoan;
@@ -77,7 +79,8 @@ let createCentUser =async(body)=>{
         deleted:'N',
         mobile:body.primary_mobile_no,
         PAN:body.pan_no,
-        is_pan_verified:'N',
+        is_pan_verified:'Y',
+        mobile_verify:1,
         created:body.currentStamp
     });
     return createCentUser;
@@ -243,8 +246,35 @@ let accountDetails = async(req,res)=>{
 }
 }
 
+let createDefaultLead = async(data)=>{
+    try{
+        let config ={
+            method:'post',
+            url:Config.faircentApi.url + '/loan_ruleapi/borrower_api_account_creation',
+            data:{
+                "password": "Password@123",
+                "username":data.username,
+                "email":data.email
+            }
+        }
+        let createLeadDetails = await httpReqequest(config)
+        console.log('createLeadDetails',createLeadDetails)
+        return {
+            message:'created new user successfully!',
+            status:200
+        }
+}catch(err){
+        console.log('error::',err.data);
+        return {
+            message:"Error occured",
+            error:err
+        }
+}
+}
+
 module.exports={
     createLead,
+    createDefaultLead,
     updateLead,
     companyDetails,
     accountDetails
