@@ -22,7 +22,7 @@ let createLead =async(req,res)=>{
         console.log('centEmployment:',centEmployment);
         console.log('centLoan:',centLoan);
         return res.json({
-            data,
+            uid:data,
             message:'captured',
             status:200
         })
