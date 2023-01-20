@@ -49,11 +49,11 @@ let sendOtp = async (req, res) => {
       });
     }
     let checkOtpCounts = await db.sequelize.query(
-      `select * from cent_verification where verification_key = ${req.body.mobile_no} limit 3`
+      `select * from cent_verification where verification_key = ${req.body.mobile_no} limit 5`
     );
     console.log("checkOtpCounts::", checkOtpCounts[0]);
     console.log("checkOtpCounts::", checkOtpCounts[0].length);
-    if (checkOtpCounts[0].length === 3) {
+    if (checkOtpCounts[0].length === 5) {
         return res.json({
           message: "Maximum limit exceeded for this user",
           status:409
@@ -66,7 +66,8 @@ let sendOtp = async (req, res) => {
       },
       raw: true
     });
-    if (checkUserVerifyStatus.LENGTH === 0) {
+    console.log('checkUserVerifyStatus:::',checkUserVerifyStatus);
+    if (checkUserVerifyStatus.length === 0) {
       let OTP = randomize("000000");
       console.log("otp generated is::", OTP);
       let currentStamp = getEpochTimestamp();
@@ -96,7 +97,7 @@ let sendOtp = async (req, res) => {
       console.log("sendOtpMessage:::", sendOtpMessage);
       return res.json({
         message: "Pan verificaiton details",
-        data:sendOtpMessage.result,
+        data:sendOtpMessage,
         status: 200,
       });
     } else {
