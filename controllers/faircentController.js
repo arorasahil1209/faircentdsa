@@ -1,5 +1,7 @@
 let { httpReqequest } = require("../services/faircent.services");
 let { createDefaultLead } = require("../controllers/leadControllers");
+let FormData = require('form-data');
+let fs = require('fs');
 const db = require("../models");
 const Users = db.users;
 const centUser = db.centUser;
@@ -49,6 +51,7 @@ let sendOtp = async (req, res) => {
     let checkOtpCounts = await db.sequelize.query(
       `select * from cent_verification where verification_key = ${req.body.mobile_no} limit 3`
     );
+    console.log("checkOtpCounts::", checkOtpCounts[0]);
     console.log("checkOtpCounts::", checkOtpCounts[0].length);
     if (checkOtpCounts[0].length === 3) {
         return res.json({
@@ -63,7 +66,7 @@ let sendOtp = async (req, res) => {
       },
       raw: true
     });
-    if (checkUserVerifyStatus.LENGTH > 0) {
+    if (checkUserVerifyStatus.LENGTH === 0) {
       let OTP = randomize("000000");
       console.log("otp generated is::", OTP);
       let currentStamp = getEpochTimestamp();
@@ -93,7 +96,7 @@ let sendOtp = async (req, res) => {
       console.log("sendOtpMessage:::", sendOtpMessage);
       return res.json({
         message: "Pan verificaiton details",
-        //data:sendOtpMessage.result,
+        data:sendOtpMessage.result,
         status: 200,
       });
     } else {
@@ -143,8 +146,41 @@ let verifyOtp = async (req, res) => {
   }
 };
 
+let uploadDocument = async (req, res) => {
+  try {
+    console.log('body:::',req.files);
+    let data = new FormData();
+    data.append('type', 'TEST');
+    data.append('uid', '1234');
+    data.append('fileKey', fs.createReadStream('/C:/Users/Sahil Arora/Desktop/testdoc.png'));
+    var config = {
+      method: 'post',
+      url: 'https://fcnode11.faircent.com/v1/api/standard/upload',
+      headers: { 
+        'Content-Type': 'application/json', 
+        'x-application-id': 'b6419f1a493a09e21aae9de583f0d9dd', 
+        'x-application-name': 'FAIRCENT', 
+        ...data.getHeaders()
+      },
+      data : data
+    };
+    let uploadS3 = await httpReqequest(config);
+    console.log('uplod s3::',uploadS3)
+  } catch (err) {
+    console.log("error::", err);
+    return res.json({
+      message: "Error occured",
+      error: err,
+    });
+  }
+};
+
+
+
+
 module.exports = {
   verifyPan,
   sendOtp,
   verifyOtp,
+  uploadDocument
 };
