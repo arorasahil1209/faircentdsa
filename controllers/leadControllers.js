@@ -68,7 +68,7 @@ let createUser =async(body)=>{
         data:null,
         pass:'default',
         language:'default',
-        name:'default18'
+        name:body.name
     })
     return createUser;
 }
