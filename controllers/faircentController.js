@@ -125,9 +125,10 @@ let verifyOtp = async (req, res) => {
     let verifyOtpForUser = await db.sequelize.query(
       `select * from cent_verification where verification_key = ${req.body.mobile_no}`
     );
+    console.log('verifyOtpForUser::',verifyOtpForUser[0][0]['verification_value']);
     if (verifyOtpForUser[0][0]["verification_value"] == req.body.otp) {
-      let createNewLead = await createDefaultLead(req.body);
-      console.log("createNewLeadn::", createNewLead.data);
+      //let createNewLead = await createDefaultLead(req.body);
+     // console.log("createNewLeadn::", createNewLead.data);
       return res.json({
         message: "Otp verify successfully",
         status: 200,
