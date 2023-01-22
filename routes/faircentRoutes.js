@@ -34,7 +34,7 @@ const upload =multer({storage})
 router.post('/upload-document',upload.single('fileKey'),async(req,res)=>{
     try{
         
-        console.log('dirname::',`${path.resolve('uploads')}/testdoc.png`)
+    console.log('dirname::',`${path.resolve('uploads')}/testdoc.png`)
     console.log('files;:',req.file.originalname)
    
    console.log('req.file.buffer',req.file)
@@ -42,7 +42,7 @@ router.post('/upload-document',upload.single('fileKey'),async(req,res)=>{
     datas.append('type', req.body.type);
     datas.append('uid', req.body.uid);
     datas.append('fileKey', fs.createReadStream(`${path.resolve('uploads')}/${req.file.originalname}`));
-    fs.unlinkSync(`${path.resolve('uploads')}/${req.file.originalname}`);
+    
     var config = {
       method: 'post',
       url: 'https://fcnode11.faircent.com/v1/api/standard/upload',
@@ -62,6 +62,7 @@ router.post('/upload-document',upload.single('fileKey'),async(req,res)=>{
     }
     console.log("userData::::",userData);
     let updateUserPhotograph =  await uploadUserPhoto(userData)
+    fs.unlinkSync(`${path.resolve('uploads')}/${req.file.originalname}`);
     return res.status(200).json({
         message:'file uploaded successfully on s3 bucket',
         data:s3Upload.data
