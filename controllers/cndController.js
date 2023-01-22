@@ -7,7 +7,11 @@ let getStates = async(req,res) =>{
     try{
     console.log('all states')
     let getStateData = await centCnd.findAll({
-        where: {"cnd_group":"STATE_INDIA"},
+        where: {
+            "cnd_group":"STATE_INDIA",
+            "deleted":'N',
+            "is_active":1
+        },
         raw:true
     })
     return res.json({
@@ -27,9 +31,12 @@ let getStates = async(req,res) =>{
 
 let getCities = async(req,res) =>{
     try{  
+        console.log('citycode::',req.query.cityCode.toUpperCase())
     let getCityData = await centCnd.findAll({
         where: {
-            "cnd_group":req.query.cityCode
+            "cnd_group":req.query.cityCode.toUpperCase(),
+            "deleted":'N',
+            "is_active":1
         },
         raw:true
     })
@@ -52,7 +59,9 @@ let getReligions = async(req,res) =>{
     try{  
     let getReligionData = await centCnd.findAll({
         where: {
-            "cnd_group":"INDIA_RELIGION"
+            "cnd_group":"INDIA_RELIGION",
+            "deleted":'N',
+            "is_active":1
         },
         raw:true
     })
@@ -74,7 +83,9 @@ let getLoans = async(req,res) =>{
     try{  
     let getLoanData = await centCnd.findAll({
         where: {
-            "cnd_group":"INDIA_LOAN"
+            "cnd_group":"INDIA_LOAN",
+            "deleted":'N',
+            "is_active":1
         },
         raw:true
     })
@@ -96,7 +107,9 @@ let getEmploymentTypes = async(req,res) =>{
     try{  
     let getEmploymentData = await centCnd.findAll({
         where: {
-            "cnd_group":"EMPLOYMENT_TYPE"
+            "cnd_group":"EMPLOYMENT_TYPE",
+            "deleted":'N',
+            "is_active":1
         },
         raw:true
     })
@@ -141,7 +154,9 @@ let getIndianAssets = async(req,res) =>{
     try{  
     let getBuisnessData = await centCnd.findAll({
         where: {
-            "cnd_group":"INDIA_ASSET"
+            "cnd_group":"INDIA_ASSET",
+            "deleted":'N',
+            "is_active":1
         },
         raw:true
     })
@@ -161,22 +176,25 @@ let getIndianAssets = async(req,res) =>{
 
 let getPinCodes = async(req,res) =>{
     try{  
-    let getBuisnessData = await centCnd.findAll({
+    //select DISTINCT cnd_name,cnd_code,cnd_group,priority from cent_cnd WHERE cnd_group = "STATE_PIN" and cnd_parent_id =332
+    let pinCodes = await centCnd.findAll({
         where: {
             "cnd_parent_id":req.query.parentId,
-            "cnd_group":req.query.cndGroup,
+            "cnd_group":"STATE_PIN",
+            "deleted":'N',
+            "is_active":1
         },
         raw:true
     })
     return res.json({
-        data:getBuisnessData,
+        data:pinCodes,
         message:'SUCCESS',
         status:200
     })
     }catch(err){
         console.log('error ',err);
         return res.json({
-            message:"Error occured religion list",
+            message:"Error occured pinCodes list",
             error:err
         })
     }
@@ -231,6 +249,30 @@ let getResidenceType = async(req,res) =>{
     }
 }
 
+let getEducationTypes = async(req,res) =>{
+    try{  
+    let getEducationTypes = await centCnd.findAll({
+        where: {
+            "cnd_group":"EDUCATION_QULIFICATION",
+            "deleted":"N",
+            "is_active":1
+        },
+        raw:true
+    })
+    return res.json({
+        data:getEducationTypes,
+        message:'SUCCESS',
+        status:200
+    })
+    }catch(err){
+        console.log('error ',err);
+        return res.json({
+            message:"Error occured education type list",
+            error:err
+        })
+    }
+}
+
 
 module.exports ={
     getStates,
@@ -242,5 +284,6 @@ module.exports ={
     getIndianAssets,
     getPinCodes,
     getAllBanks,
-    getResidenceType
+    getResidenceType,
+    getEducationTypes
 }

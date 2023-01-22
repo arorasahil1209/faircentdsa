@@ -4,6 +4,7 @@ let express = require('express');
 const db = require("./models/index");
 let Config =require('./config/dev.json');
 let app = express();
+app.use(express.json());
 let cors = require('cors');
 const bp = require('body-parser')
 
@@ -12,8 +13,6 @@ let cnd = require('./routes/cndRoutes');
 let faircent = require('./routes/faircentRoutes');
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
-
-
 app.use(cors())
 
 /* import routes here */
