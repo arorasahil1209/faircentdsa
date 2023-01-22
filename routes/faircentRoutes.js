@@ -62,7 +62,7 @@ router.post('/upload-document',upload.single('fileKey'),async(req,res)=>{
     }
     console.log("userData::::",userData);
     let updateUserPhotograph =  await uploadUserPhoto(userData)
-    fs.unlinkSync(`${path.resolve('uploads')}/${req.file.originalname}`);
+    //fs.unlinkSync(`${path.resolve('uploads')}/${req.file.originalname}`);
     return res.status(200).json({
         message:'file uploaded successfully on s3 bucket',
         data:s3Upload.data
