@@ -3,7 +3,10 @@ let { createDefaultLead } = require("../controllers/leadControllers");
 const multer = require("multer");
 const upload = multer({ dest: './uploads/' });
 let FormData = require('form-data');
+var axios = require('axios');
 let fs = require('fs');
+let path = require('path');
+let { uploadUserPhoto } = require("../controllers/leadControllers");
 const db = require("../models");
 const Users = db.users;
 const centUser = db.centUser;
@@ -203,6 +206,5 @@ module.exports = {
   verifyPan,
   sendOtp,
   verifyOtp,
-  uploadDocument,
   uploadS3Docs
 };
