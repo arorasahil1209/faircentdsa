@@ -273,6 +273,31 @@ let getEducationTypes = async(req,res) =>{
     }
 }
 
+let getDocumentVerifications = async(req,res) =>{
+    try{  
+    let documentVerifications = await centCnd.findAll({
+        where: {
+            "cnd_group":"DOCUMENT_VERIFICATION",
+            "deleted":"N",
+            "is_active":1
+        },
+        raw:true
+    })
+    return res.json({
+        data:documentVerifications,
+        message:'SUCCESS',
+        status:200
+    })
+    }catch(err){
+        console.log('error ',err);
+        return res.json({
+            message:"Error occured documentVerifications type list",
+            error:err
+        })
+    }
+}
+
+
 
 module.exports ={
     getStates,
@@ -285,5 +310,6 @@ module.exports ={
     getPinCodes,
     getAllBanks,
     getResidenceType,
-    getEducationTypes
+    getEducationTypes,
+    getDocumentVerifications
 }

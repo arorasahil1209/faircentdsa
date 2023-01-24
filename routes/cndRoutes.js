@@ -2,7 +2,7 @@ let express = require('express');
 let router = express.Router();
 let {getStates,getCities,getReligions,getLoans,getEmploymentTypes,
     getBusinessTypes,getIndianAssets,getPinCodes,getAllBanks,
-    getResidenceType,getEducationTypes
+    getResidenceType,getEducationTypes,getDocumentVerifications
     } = require('../controllers/cndController');
 
 router.get('/states',getStates);
@@ -16,5 +16,6 @@ router.get('/pin',getPinCodes);
 router.get('/bank',getAllBanks); 
 router.get('/residence-types',getResidenceType); 
 router.get('/education',getEducationTypes); 
+router.get('/document-verifications',getDocumentVerifications); 
 
 module.exports = router

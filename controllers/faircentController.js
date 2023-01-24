@@ -1,7 +1,7 @@
 let { httpReqequest } = require("../services/faircent.services");
 let { createDefaultLead } = require("../controllers/leadControllers");
 const multer = require("multer");
-const upload = multer({ dest: './uploads/' });
+//const upload = multer({ dest: './uploads/' });
 let FormData = require('form-data');
 var axios = require('axios');
 let fs = require('fs');
@@ -155,14 +155,13 @@ let verifyOtp = async (req, res) => {
 
 let uploadS3Docs = async (req, res) => {
   try{
-        
+    console.log('request::::::',req)
     console.log('dirname::',`${path.resolve('uploads')}/testdoc.png`)
-    console.log('files;:',req.file.originalname)
-   
-   console.log('req.file.buffer',req.file)
+    console.log('req.file.buffer',req.file)
     let datas = new FormData();
     datas.append('type', req.body.type);
     datas.append('uid', req.body.uid);
+    datas.append('docId', req.body.docId);
     datas.append('fileKey', fs.createReadStream(`${path.resolve('uploads')}/${req.file.originalname}`));
     
     var config = {
@@ -180,7 +179,9 @@ let uploadS3Docs = async (req, res) => {
     console.log('s3Upload::',s3Upload.data);
     let userData = {
         uid:req.body.uid,
-        photoId:s3Upload.data.result.fileKey
+        photoId:s3Upload.data.result.fileKey,
+        docId:req.body.docId
+
     }
     console.log("userData::::",userData);
     let updateUserPhotograph =  await uploadUserPhoto(userData)

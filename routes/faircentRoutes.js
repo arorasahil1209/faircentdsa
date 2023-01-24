@@ -1,5 +1,9 @@
 let express = require('express');
 const multer = require("multer");
+let FormData = require('form-data');
+var axios = require('axios');
+let fs = require('fs');
+let path = require('path');
 
 let router = express.Router();
 let {verifyPan,sendOtp,verifyOtp,uploadS3Docs
@@ -18,6 +22,7 @@ const storage= multer.diskStorage({
   })
 
 const upload =multer({storage})
+
 router.post('/upload-document',upload.single('fileKey'),uploadS3Docs)
 
 module.exports = router

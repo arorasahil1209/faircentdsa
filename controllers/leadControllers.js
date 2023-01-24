@@ -8,6 +8,8 @@ const centUser = db.centUser;
 const centLoan = db.centLoan;
 const centEmployment = db.centEmployment;
 const centBankDetails = db.centBankDetails;
+const centLoanDoc = db.centLoanDoc;
+const centLoanDetails = db.centLoanDetails;
 let { findMaxUid, getEpochTimestamp } = require("../dao/repo");
 /* create new lead */
 let createLead = async (req, res) => {
@@ -125,6 +127,13 @@ let updateLead = async (req, res) => {
     //     where: { uid: req.body.uid },
     //   }
     // );
+    let loanId = await centLoan.findAll({
+        where: {
+          "uid":req.body.uid
+      },
+      raw:true
+    })
+    console.log('loan id :::',loanId);
     let updateCentUser = await centUser.update(
       {
         dob: req.body.dob,
@@ -141,6 +150,13 @@ let updateLead = async (req, res) => {
       }
     );
     console.log("updateCentUser:", updateCentUser);
+    let  updateLoanDetails  = await centLoanDetails.create({
+        uid:req.body.uid,
+        loan_id:loanId[0]['id'],
+        created: currentStamp,
+        residence_type_cnd:req.body.residence_type_cnd
+    })
+    console.log('updateLoanDetails::',updateLoanDetails);
     return res.json({
       data: updateCentUser,
       message: "Update user data successfully!",
@@ -176,6 +192,7 @@ let updateBusinessLead = async (req, res) => {
           where: { uid: req.body.uid }
         }
       );
+
       console.log("updateCentUser:", updateCentUser);
       return res.json({
         data: updateCentUser,
@@ -393,12 +410,16 @@ let getBorrowerDetails = async (req,res) => {
   
   let uploadUserPhoto = async (body) => {
     try {
-      let updateCentUser = await centUser.update(
+      let updateCentUser = await centLoanDoc.update(
         {
-          photo:body.photoId
+          doc_type_cnd:body.docId
         },
         {
-          where: { uid: body.uid }
+          where: { 
+            uid: body.uid ,
+            upload_file_key:'TEST',
+            doc_file:body.photoId
+          }
         }
       );
       return {
