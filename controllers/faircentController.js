@@ -1,7 +1,6 @@
 let { httpReqequest } = require("../services/faircent.services");
 let { createDefaultLead } = require("../controllers/leadControllers");
 const multer = require("multer");
-//const upload = multer({ dest: './uploads/' });
 let FormData = require('form-data');
 var axios = require('axios');
 let fs = require('fs');
@@ -11,7 +10,8 @@ const db = require("../models");
 const Users = db.users;
 const centUser = db.centUser;
 const centVerification = db.centVerification;
-let { getEpochTimestamp } = require("../dao/repo");
+const centCnd = db.centCnd;
+let { getEpochTimestamp,getCndInfo } = require("../dao/repo");
 let Config = require("../config/dev.json");
 let randomize = require("randomatic");
 let verifyPan = async (req, res) => {
@@ -154,14 +154,12 @@ let verifyOtp = async (req, res) => {
 };
 
 let uploadS3Docs = async (req, res) => {
-  try{
-    console.log('request::::::',req)
+  try{    
     console.log('dirname::',`${path.resolve('uploads')}/testdoc.png`)
-    console.log('req.file.buffer',req.file)
     let datas = new FormData();
     datas.append('type', req.body.type);
     datas.append('uid', req.body.uid);
-    datas.append('docId', req.body.docId);
+    datas.append('docType', req.body.docType);
     datas.append('fileKey', fs.createReadStream(`${path.resolve('uploads')}/${req.file.originalname}`));
     
     var config = {
@@ -176,15 +174,46 @@ let uploadS3Docs = async (req, res) => {
       data : datas
     };
     let s3Upload= await axios(config);
-    console.log('s3Upload::',s3Upload.data);
     let userData = {
         uid:req.body.uid,
         photoId:s3Upload.data.result.fileKey,
-        docId:req.body.docId
-
+        docType:req.body.docType
     }
-    console.log("userData::::",userData);
-    let updateUserPhotograph =  await uploadUserPhoto(userData)
+    let query =`SELECT id, cnd_name, cnd_code, cnd_group, priority,is_active,deleted,created,udated, 
+    updated_by,cnd_parent_id 
+    FROM cent_cnd 
+    WHERE cnd_group = 'DOCUMENT_VERIFICATION' 
+    AND deleted = 'N' AND is_active = 1
+    and cnd_code =`
+    let getDocId
+    if(req.body.docType == 'selfie'){
+      getDocId = await db.sequelize.query(
+        `${query} '${req.body.docType}'`,{
+          raw:true
+        }
+      );
+    } else if(req.body.docType == 'pan_card'){
+      getDocId = await db.sequelize.query(
+        `${query} '${req.body.docType}'`,{
+          raw:true
+        }
+      );
+    }else if(req.body.docType == 'aadhaar'){
+      getDocId = await db.sequelize.query(
+        `${query} '${req.body.docType}'`,{
+          raw:true
+        }
+      );
+    }
+    else if(req.body.docType == 'bank_statement'){
+      getDocId = await db.sequelize.query(
+        `${query} '${req.body.docType}'`,{
+          raw:true
+        }
+      );
+    }
+    userData.docId = getDocId[0][0]['id']
+    await uploadUserPhoto(userData)
     await fs.unlinkSync(`${path.resolve('uploads')}/${req.file.originalname}`);
     return res.status(200).json({
         message:'file uploaded successfully on s3 bucket',
