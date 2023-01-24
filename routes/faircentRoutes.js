@@ -6,7 +6,7 @@ let fs = require('fs');
 let path = require('path');
 
 let router = express.Router();
-let {verifyPan,sendOtp,verifyOtp,uploadS3Docs
+let {verifyPan,sendOtp,verifyOtp,uploadS3Docs,downloadDocument
     } = require('../controllers/faircentController');
 
 router.post('/pan-verification',verifyPan);
@@ -24,5 +24,6 @@ const storage= multer.diskStorage({
 const upload =multer({storage})
 
 router.post('/upload-document',upload.single('fileKey'),uploadS3Docs)
+router.post('/download-document',downloadDocument);
 
 module.exports = router
