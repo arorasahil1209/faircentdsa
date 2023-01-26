@@ -5,7 +5,6 @@ const centCnd = db.centCnd;
 
 let getStates = async(req,res) =>{
     try{
-    console.log('all states')
     let getStateData = await centCnd.findAll({
         where: {
             "cnd_group":"STATE_INDIA",
@@ -20,7 +19,6 @@ let getStates = async(req,res) =>{
         status:200
     })
     }catch(err){
-        console.log('error::',err);
         return res.json({
             message:"Error occured",
             error:err
@@ -31,7 +29,6 @@ let getStates = async(req,res) =>{
 
 let getCities = async(req,res) =>{
     try{  
-        console.log('citycode::',req.query.cityCode.toUpperCase())
     let getCityData = await centCnd.findAll({
         where: {
             "cnd_group":req.query.cityCode.toUpperCase(),
@@ -46,7 +43,6 @@ let getCities = async(req,res) =>{
         status:200
     })
     }catch(err){
-        console.log('error::',err);
         return res.json({
             message:"Error occured",
             error:err
@@ -71,7 +67,6 @@ let getReligions = async(req,res) =>{
         status:200
     })
     }catch(err){
-        console.log('error ',err);
         return res.json({
             message:"Error occured religion list",
             error:err
@@ -94,8 +89,7 @@ let getLoans = async(req,res) =>{
         message:'SUCCESS',
         status:200
     })
-    }catch(err){
-        console.log('error ',err);
+    }catch(err){ 
         return res.json({
             message:"Error occured religion list",
             error:err
@@ -118,8 +112,7 @@ let getEmploymentTypes = async(req,res) =>{
         message:'SUCCESS',
         status:200
     })
-    }catch(err){
-        console.log('error ',err);
+    }catch(err){ 
         return res.json({
             message:"Error occured religion list",
             error:err
@@ -141,8 +134,7 @@ let getBusinessTypes = async(req,res) =>{
         message:'SUCCESS',
         status:200
     })
-    }catch(err){
-        console.log('error ',err);
+    }catch(err){ 
         return res.json({
             message:"Error occured religion list",
             error:err
@@ -166,7 +158,6 @@ let getIndianAssets = async(req,res) =>{
         status:200
     })
     }catch(err){
-        console.log('error ',err);
         return res.json({
             message:"Error occured religion list",
             error:err
@@ -192,7 +183,6 @@ let getPinCodes = async(req,res) =>{
         status:200
     })
     }catch(err){
-        console.log('error ',err);
         return res.json({
             message:"Error occured pinCodes list",
             error:err
@@ -216,7 +206,6 @@ let getAllBanks = async(req,res) =>{
         status:200
     })
     }catch(err){
-        console.log('error ',err);
         return res.json({
             message:"Error occured banking list",
             error:err
@@ -241,7 +230,6 @@ let getResidenceType = async(req,res) =>{
         status:200
     })
     }catch(err){
-        console.log('error ',err);
         return res.json({
             message:"Error occured banking list",
             error:err
@@ -265,7 +253,6 @@ let getEducationTypes = async(req,res) =>{
         status:200
     })
     }catch(err){
-        console.log('error ',err);
         return res.json({
             message:"Error occured education type list",
             error:err
@@ -289,7 +276,6 @@ let getDocumentVerifications = async(req,res) =>{
         status:200
     })
     }catch(err){
-        console.log('error ',err);
         return res.json({
             message:"Error occured documentVerifications type list",
             error:err

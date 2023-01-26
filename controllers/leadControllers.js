@@ -14,7 +14,6 @@ let { findMaxUid, getEpochTimestamp } = require("../dao/repo");
 /* create new lead */
 let createLead = async (req, res) => {
   try {
-    console.log("here::", req.body);
     let data = await findMaxUid();
     let currentStamp = getEpochTimestamp();
     req.body.uid = data + 1;
@@ -25,25 +24,19 @@ let createLead = async (req, res) => {
       createCentEmployment(req.body),
       createCentLoan(req.body),
     ]);
-    console.log("user:", user);
-    console.log("centUser:", centUser);
-    console.log("centEmployment:", centEmployment);
-    console.log("centLoan:", centLoan);
     return res.json({
       uid: data + 1,
       message: "captured",
       status: 200,
     });
   } catch (err) {
-    console.log("error::", err);
     return res.json({
       message: "Error occured",
       error: err,
     });
   }
 };
-let createCentLoan = async (body) => {
-  console.log("creating loan now::::");
+let createCentLoan = async (body) => {  
   let createLoan = await centLoan.create({
     uid: body.uid,
     loan_amount_expected: 0,
@@ -82,7 +75,6 @@ let createUser = async (body) => {
 
 let createCentUser = async (body) => {
   let userName = splitName(body.name);
-  console.log("username:::", userName);
   let createCentUser = await centUser.create({
     uid: body.uid,
     deleted: "N",
@@ -132,7 +124,6 @@ let updateLead = async (req, res) => {
       },
       raw: true,
     });
-    console.log("loan id :::", loanId);
     let updateCentUser = await centUser.update(
       {
         dob: req.body.dob,
@@ -147,22 +138,19 @@ let updateLead = async (req, res) => {
       {
         where: { uid: req.body.uid },
       }
-    );
-    console.log("updateCentUser:", updateCentUser);
+    ); 
     let updateLoanDetails = await centLoanDetails.create({
       uid: req.body.uid,
       loan_id: loanId[0]["id"],
       created: currentStamp,
       residence_type_cnd: req.body.residence_type_cnd,
     });
-    console.log("updateLoanDetails::", updateLoanDetails);
     return res.json({
       data: updateCentUser,
       message: "Update user data successfully!",
       status: 200,
     });
   } catch (err) {
-    console.log("error::", err);
     return res.json({
       message: "Error occured",
       error: err,
@@ -191,15 +179,12 @@ let updateBusinessLead = async (req, res) => {
         where: { uid: req.body.uid },
       }
     );
-
-    console.log("updateCentUser:", updateCentUser);
     return res.json({
       data: updateCentUser,
       message: "Update user data successfully!",
       status: 200,
     });
   } catch (err) {
-    console.log("error::", err);
     return res.json({
       message: "Error occured",
       error: err,
@@ -241,14 +226,12 @@ let companyDetails = async (req, res) => {
         where: { uid: req.body.uid },
       }
     );
-    console.log("updateCentUser:", updateCentUser);
     return res.json({
       data: updateUser,
       message: "Update user data successfully!",
       status: 200,
     });
   } catch (err) {
-    console.log("error::", err);
     return res.json({
       message: "Error occured",
       error: err,
@@ -291,14 +274,12 @@ let accountDetails = async (req, res) => {
         where: { uid: req.body.uid },
       }
     );
-    console.log("updateCentUser:", updateCentUser);
     return res.json({
       data: updateUser,
       message: "Update user data successfully!",
       status: 200,
     });
   } catch (err) {
-    console.log("error::", err);
     return res.json({
       message: "Error occured",
       error: err,
@@ -319,13 +300,11 @@ let createDefaultLead = async (data) => {
       },
     };
     let createLeadDetails = await httpReqequest(config);
-    console.log("createLeadDetails", createLeadDetails);
     return {
       message: "created new user successfully!",
       status: 200,
     };
   } catch (err) {
-    console.log("error::", err.data);
     return {
       message: "Error occured",
       error: err,
@@ -386,7 +365,6 @@ let getBorrowerDetails = async (req, res) => {
       status: 200,
     });
   } catch (err) {
-    console.log("error::", err.data);
     return {
       message: "Error occured",
       error: err,
@@ -408,7 +386,6 @@ let getBorrowerBusinessLead = async (req, res) => {
       status: 200,
     });
   } catch (err) {
-    console.log("error::", err.data);
     return {
       message: "Error occured in getting borrower business details",
       error: err,

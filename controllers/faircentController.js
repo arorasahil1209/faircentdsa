@@ -16,7 +16,6 @@ let Config = require("../config/dev.json");
 let randomize = require("randomatic");
 let verifyPan = async (req, res) => {
   try {
-    console.log("here");
     if (!req.body.pan) {
       return res.json({
         message: "PAN number is mandatory",
@@ -31,14 +30,12 @@ let verifyPan = async (req, res) => {
       },
     };
     let verifyPan = await httpReqequest(config);
-    console.log("verifyPan:::", verifyPan);
     return res.json({
       message: "Pan verificaiton details",
       data: verifyPan.result.data,
       status: 200,
     });
   } catch (err) {
-    console.log("error::", err);
     return res.json({
       message: "Error occured",
       error: err,
@@ -56,8 +53,6 @@ let sendOtp = async (req, res) => {
     let checkOtpCounts = await db.sequelize.query(
       `select * from cent_verification where verification_key = ${req.body.mobile_no} limit 5`
     );
-    console.log("checkOtpCounts::", checkOtpCounts[0]);
-    console.log("checkOtpCounts::", checkOtpCounts[0].length);
     if (checkOtpCounts[0].length === 5) {
       return res.json({
         message: "Maximum limit exceeded for this user",
@@ -71,10 +66,8 @@ let sendOtp = async (req, res) => {
       },
       raw: true,
     });
-    console.log("checkUserVerifyStatus:::", checkUserVerifyStatus);
     if (checkUserVerifyStatus.length === 0) {
       let OTP = randomize("000000");
-      console.log("otp generated is::", OTP);
       let currentStamp = getEpochTimestamp();
       let verificationData = {
         verification_key_type: "MOB_OTP_USER_REGISTERATION",
@@ -83,11 +76,9 @@ let sendOtp = async (req, res) => {
         verification_ipaddress: req.body.ip_address,
         verification_key: req.body.mobile_no,
       };
-      console.log("verificationData::", verificationData);
       let saveVerificationData = await db.sequelize.query(
         `INSERT INTO cent_verification(verification_key,verification_key_type,verification_value,verification_ipaddress,verification_create_time) VALUES(${req.body.mobile_no},'MOB_OTP_USER_REGISTERATION','${OTP}','${req.body.ip_address}',${currentStamp})`
-      );
-      console.log("saveVerificationData::", saveVerificationData);
+      ); 
       let config = {
         method: "post",
         url: Config.faircentApi.url + "/send/sms",
@@ -99,7 +90,6 @@ let sendOtp = async (req, res) => {
         },
       };
       let sendOtpMessage = await httpReqequest(config);
-      console.log("sendOtpMessage:::", sendOtpMessage);
       return res.json({
         message: "Pan verificaiton details",
         data: sendOtpMessage,
@@ -112,7 +102,6 @@ let sendOtp = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log("error::", err);
     return res.json({
       message: "Error occured",
       error: err,
@@ -130,13 +119,8 @@ let verifyOtp = async (req, res) => {
     let verifyOtpForUser = await db.sequelize.query(
       `select * from cent_verification where verification_key = ${req.body.mobile_no}`
     );
-    console.log(
-      "verifyOtpForUser::",
-      verifyOtpForUser[0][0]["verification_value"]
-    );
     if (verifyOtpForUser[0][0]["verification_value"] == req.body.otp) {
       //let createNewLead = await createDefaultLead(req.body);
-      // console.log("createNewLeadn::", createNewLead.data);
       return res.json({
         message: "Otp verify successfully",
         status: 200,
@@ -148,7 +132,6 @@ let verifyOtp = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log("error::", err);
     return res.json({
       message: "Error occured",
       error: err,
@@ -217,7 +200,6 @@ let uploadS3Docs = async (req, res) => {
       data: s3Upload.data,
     });
   } catch (err) {
-    console.log("s3 error", err);
     return res.status(400).json({
       message: "error occured while uploading data to s3",
       error: err,
@@ -248,14 +230,12 @@ let downloadDocument = async (req, res) => {
       },
     };
     let downloadFile = await httpReqequest(config);
-    console.log('downloadFile::',downloadFile);
     return res.json({
       message: "File download successfully",
       data: downloadFile.result,
       status: 200,
     });
   } catch (err) {
-    console.log("error while downloading the file::", err);
     return res.json({
       message: "Error occured",
       error: err,

@@ -2,7 +2,6 @@ let axios = require('axios');
 
 let httpReqequest = async (config)=>{
     try{
-        console.log('config.data::',config)
         let response = await axios({
             method:config.method,
             url:config.url,
@@ -16,7 +15,6 @@ let httpReqequest = async (config)=>{
         })
         return response.data;
     }catch(error){
-        //console.log('error in api request is',JSON.stringify(error));
         return error
     }
 }
