@@ -9,7 +9,10 @@ router.post('/borrowers-personal-details',updateLead);
 router.post('/borrowers-business-details',updateBusinessLead);
 router.post('/account-details',accountDetails);
 
-router.get('/leadss',getLeads)
 router.get('/borrowers-personal-details',getBorrowerDetails);
 router.get('/borrowers-business-details',getBorrowerBusinessLead);
+
+
+router.get('/leads',getLeads);
+
 module.exports = router

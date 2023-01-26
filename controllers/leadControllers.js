@@ -1,6 +1,6 @@
 const sequelize = require("sequelize");
 let { httpReqequest } = require("../services/faircent.services");
-let {splitName}= require('../dao/util');
+let { splitName } = require("../dao/util");
 const db = require("../models");
 let Config = require("../config/dev.json");
 const Users = db.users;
@@ -62,7 +62,6 @@ let createCentLoan = async (body) => {
 };
 
 let createUser = async (body) => {
-
   let createUser = await Users.create({
     uid: body.uid,
     mail: body.primary_email_id,
@@ -83,7 +82,7 @@ let createUser = async (body) => {
 
 let createCentUser = async (body) => {
   let userName = splitName(body.name);
-  console.log('username:::',userName);
+  console.log("username:::", userName);
   let createCentUser = await centUser.create({
     uid: body.uid,
     deleted: "N",
@@ -92,8 +91,8 @@ let createCentUser = async (body) => {
     is_pan_verified: "Y",
     mobile_verify: 1,
     created: body.currentStamp,
-    fname:userName.firstName,
-    lname:userName.lastName,
+    fname: userName.firstName,
+    lname: userName.lastName,
   });
   return createCentUser;
 };
@@ -102,7 +101,7 @@ let createCentEmployment = async (body) => {
   let createCentEmp = await centEmployment.create({
     uid: body.uid,
     deleted: "N",
-    employment_type_cnd: body.employment_type_cnd,  //changing this to dyanmic value
+    employment_type_cnd: body.employment_type_cnd, //changing this to dyanmic value
     created: body.currentStamp,
     comp_name: "default",
   });
@@ -128,35 +127,35 @@ let updateLead = async (req, res) => {
     //   }
     // );
     let loanId = await centLoan.findAll({
-        where: {
-          "uid":req.body.uid
+      where: {
+        uid: req.body.uid,
       },
-      raw:true
-    })
-    console.log('loan id :::',loanId);
+      raw: true,
+    });
+    console.log("loan id :::", loanId);
     let updateCentUser = await centUser.update(
       {
         dob: req.body.dob,
         marital_status: req.body.marital_status,
-        city: req.body.city,  // string west delhi
-        pin: req.body.pin,  // 110018
-        state_cnd:req.body.state_cnd,
+        city: req.body.city, // string west delhi
+        pin: req.body.pin, // 110018
+        state_cnd: req.body.state_cnd,
         udated: currentStamp,
-        address:req.body.address,
-        highest_education:req.body.highest_education
+        address: req.body.address,
+        highest_education: req.body.highest_education,
       },
       {
-        where: { uid: req.body.uid }
+        where: { uid: req.body.uid },
       }
     );
     console.log("updateCentUser:", updateCentUser);
-    let  updateLoanDetails  = await centLoanDetails.create({
-        uid:req.body.uid,
-        loan_id:loanId[0]['id'],
-        created: currentStamp,
-        residence_type_cnd:req.body.residence_type_cnd
-    })
-    console.log('updateLoanDetails::',updateLoanDetails);
+    let updateLoanDetails = await centLoanDetails.create({
+      uid: req.body.uid,
+      loan_id: loanId[0]["id"],
+      created: currentStamp,
+      residence_type_cnd: req.body.residence_type_cnd,
+    });
+    console.log("updateLoanDetails::", updateLoanDetails);
     return res.json({
       data: updateCentUser,
       message: "Update user data successfully!",
@@ -172,41 +171,41 @@ let updateLead = async (req, res) => {
 };
 
 let updateBusinessLead = async (req, res) => {
-    try {
-      if (!req.body.uid) {
-        return res.json({
-          message: "UID is mandatory",
-        });
-      }
-      let currentStamp = getEpochTimestamp();
-      let updateCentUser = await centEmployment.update(
-        {
-          comp_name: req.body.comp_name,
-          comp_address: req.body.comp_address,
-          comp_city: req.body.comp_city,  // string west delhi
-          comp_cnd_state:req.body.comp_cnd_state,
-          comp_pin: req.body.comp_pin,  // 110018
-          udated: currentStamp
-        },
-        {
-          where: { uid: req.body.uid }
-        }
-      );
-
-      console.log("updateCentUser:", updateCentUser);
+  try {
+    if (!req.body.uid) {
       return res.json({
-        data: updateCentUser,
-        message: "Update user data successfully!",
-        status: 200,
-      });
-    } catch (err) {
-      console.log("error::", err);
-      return res.json({
-        message: "Error occured",
-        error: err,
+        message: "UID is mandatory",
       });
     }
-  };
+    let currentStamp = getEpochTimestamp();
+    let updateCentUser = await centEmployment.update(
+      {
+        comp_name: req.body.comp_name,
+        comp_address: req.body.comp_address,
+        comp_city: req.body.comp_city, // string west delhi
+        comp_cnd_state: req.body.comp_cnd_state,
+        comp_pin: req.body.comp_pin, // 110018
+        udated: currentStamp,
+      },
+      {
+        where: { uid: req.body.uid },
+      }
+    );
+
+    console.log("updateCentUser:", updateCentUser);
+    return res.json({
+      data: updateCentUser,
+      message: "Update user data successfully!",
+      status: 200,
+    });
+  } catch (err) {
+    console.log("error::", err);
+    return res.json({
+      message: "Error occured",
+      error: err,
+    });
+  }
+};
 let companyDetails = async (req, res) => {
   try {
     if (!req.body.uid) {
@@ -334,24 +333,58 @@ let createDefaultLead = async (data) => {
   }
 };
 
-let getLeads = async (req,res) => {
+let getLeads = async (req, res) => {
   try {
-    let config = {
-      method: "post",
-      url:
-        Config.faircentApi.url + "/loan_ruleapi/borrower_api_account_creation",
-      data: {
-        password: "Password@123",
-        username: data.username,
-        email: data.email,
-      },
-    };
-    let createLeadDetails = await httpReqequest(config);
-    console.log("createLeadDetails", createLeadDetails);
-    return {
-      message: "created new user successfully!",
+    let [getLeadsData,count] = await Promise.all (  [ (db.sequelize.query(
+      `
+      select cu.fname,cu.lname,
+      cu.uid,u.mail,cu.dob,
+      cu.address,cu.city,cu.pin,
+      cu.mobile,cu.PAN,cu.gender,
+      cu.is_pan_verified
+      from cent_user cu
+      join users u on u.uid = cu.uid
+      limit ${req.query.limit} offset ${req.query.offset}
+      `)
+    ),
+    (db.sequelize.query(
+      `
+      select count(*) as count
+      from cent_user cu
+      join users u on u.uid = cu.uid
+      `,{
+        raw:true
+      })
+    )
+    ]
+    );
+    return res.status(200).json({
+      message: "Leads data",
+      data:getLeadsData[0],
+      count:count[0][0]['count'],
       status: 200,
-    };
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Error occured while fetching the leads data",
+      error: err,
+    });
+  }
+};
+
+let getBorrowerDetails = async (req, res) => {
+  try {
+    let borrowerData = await centUser.findAll({
+      where: {
+        uid: req.query.uid,
+      },
+      raw: true,
+    });
+    return res.json({
+      message: "Borrower Details",
+      data: borrowerData,
+      status: 200,
+    });
   } catch (err) {
     console.log("error::", err.data);
     return {
@@ -361,79 +394,54 @@ let getLeads = async (req,res) => {
   }
 };
 
-let getBorrowerDetails = async (req,res) => {
-    try {
-      let borrowerData = await centUser.findAll({
+let getBorrowerBusinessLead = async (req, res) => {
+  try {
+    let borrowerBusinessData = await centEmployment.findAll({
+      where: {
+        uid: req.query.uid,
+      },
+      raw: true,
+    });
+    return res.json({
+      message: "Borrower business Details",
+      data: borrowerBusinessData,
+      status: 200,
+    });
+  } catch (err) {
+    console.log("error::", err.data);
+    return {
+      message: "Error occured in getting borrower business details",
+      error: err,
+    };
+  }
+};
+
+let uploadUserPhoto = async (body) => {
+  try {
+    let updateCentUser = await centLoanDoc.update(
+      {
+        doc_type_cnd: body.docId,
+      },
+      {
         where: {
-            "uid":req.query.uid
+          uid: body.uid,
+          upload_file_key: "TEST",
+          doc_file: body.photoId,
         },
-        raw:true
-      })
-      return res.json({
-        message: "Borrower Details",
-        data:borrowerData,
-        status: 200,
-      });
-    } catch (err) {
-      console.log("error::", err.data);
-      return {
-        message: "Error occured",
-        error: err,
-      };
-    }
-  };
-
-
-  let getBorrowerBusinessLead = async (req,res) => {
-    try {
-      let borrowerBusinessData = await centEmployment.findAll({
-        where: {
-            "uid":req.query.uid
-        },
-        raw:true
-      })
-      return res.json({
-        message: "Borrower business Details",
-        data:borrowerBusinessData,
-        status: 200,
-      });
-    } catch (err) {
-      console.log("error::", err.data);
-      return {
-        message: "Error occured in getting borrower business details",
-        error: err,
-      };
-    }
-  };
-
-
-  
-  let uploadUserPhoto = async (body) => {
-    try {
-      let updateCentUser = await centLoanDoc.update(
-        {
-          doc_type_cnd:body.docId
-        },
-        {
-          where: { 
-            uid: body.uid ,
-            upload_file_key:'TEST',
-            doc_file:body.photoId
-          }
-        }
-      );
-      return {
-        message: "Photo saved successfully",
-        data:updateCentUser,
-        status: 200
-      };
-    } catch (err) { 
-      return {
-        message: "Error occured in uploading user photograph",
-        error: err,
-      };
-    }
-  };
+      }
+    );
+    return {
+      message: "Photo saved successfully",
+      data: updateCentUser,
+      status: 200,
+    };
+  } catch (err) {
+    return {
+      message: "Error occured in uploading user photograph",
+      error: err,
+    };
+  }
+};
 
 module.exports = {
   createLead,
@@ -445,5 +453,5 @@ module.exports = {
   getBorrowerDetails,
   updateBusinessLead,
   getBorrowerBusinessLead,
-  uploadUserPhoto
+  uploadUserPhoto,
 };
