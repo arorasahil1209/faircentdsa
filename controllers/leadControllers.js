@@ -10,14 +10,29 @@ const centEmployment = db.centEmployment;
 const centBankDetails = db.centBankDetails;
 const centLoanDoc = db.centLoanDoc;
 const centLoanDetails = db.centLoanDetails;
+let parser = require('xml2json');
 let { findMaxUid, getEpochTimestamp } = require("../dao/repo");
 /* create new lead */
 let createLead = async (req, res) => {
   try {
-    let data = await findMaxUid();
+    // let data = await findMaxUid();
+    //console.log('max uid::',data);
     let currentStamp = getEpochTimestamp();
-    req.body.uid = data + 1;
+    //req.body.uid = data + 1;
     req.body.currentStamp = currentStamp;
+    let config = {
+      method: "post",
+      url:Config.faircentApi.droopleUrl + '/loan_ruleapi/borrower_api_account_creation',  
+      data: {
+        password: Config.faircentApi.tempPassword,
+        username: req.body.name,
+        email: req.body.primary_email_id,
+      },
+    };
+    let defaultLead = await httpReqequest(config);
+    console.log('default lead::',defaultLead);
+    console.log('default lead::',defaultLead.value);
+    req.body.uid = defaultLead.value;
     let [user, centUser, centEmployment, centLoan] = await Promise.all([
       createUser(req.body),
       createCentUser(req.body),
@@ -25,11 +40,12 @@ let createLead = async (req, res) => {
       createCentLoan(req.body),
     ]);
     return res.json({
-      uid: data + 1,
+      uid: defaultLead.value,
       message: "captured",
       status: 200,
     });
   } catch (err) {
+    console.log('error::',err);
     return res.json({
       message: "Error occured",
       error: err,
@@ -128,18 +144,19 @@ let updateLead = async (req, res) => {
       {
         dob: req.body.dob,
         marital_status: req.body.marital_status,
-        city: req.body.city, // string west delhi
-        pin: req.body.pin, // 110018
+        city: req.body.city, 
+        pin: req.body.pin,
         state_cnd: req.body.state_cnd,
         udated: currentStamp,
         address: req.body.address,
         highest_education: req.body.highest_education,
+        gender: req.body.gender
       },
       {
         where: { uid: req.body.uid },
       }
     ); 
-    let updateLoanDetails = await centLoanDetails.create({
+    await centLoanDetails.create({
       uid: req.body.uid,
       loan_id: loanId[0]["id"],
       created: currentStamp,
