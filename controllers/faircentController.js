@@ -200,6 +200,7 @@ let uploadS3Docs = async (req, res) => {
       data: s3Upload.data,
     });
   } catch (err) {
+    console.log('error::',err)
     return res.status(400).json({
       message: "error occured while uploading data to s3",
       error: err,
