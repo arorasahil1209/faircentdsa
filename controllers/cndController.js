@@ -315,7 +315,29 @@ const getDsaRoles = async (req, res) => {
     });
   }
 };
-
+const updateDsaRoles = async (req, res) => {
+    try {
+      let role = await centDsaRoles.update(
+        {
+          name: req.body.name,
+          isActive: req.body.isActive,
+        },
+        {
+          where: { id: req.body.roleId },
+        }
+      );
+      return res.json({
+        data: role,
+        message: "Roles List",
+        status: 200,
+      });
+    } catch (err) {
+      return res.json({
+        message: "Error occured while getting all roles",
+        error: err,
+      });
+    }
+  };
 module.exports = {
   getStates,
   getCities,
@@ -331,4 +353,5 @@ module.exports = {
   getEducationTypes,
   getDocumentVerifications,
   getDsaRoles,
+  updateDsaRoles
 };
