@@ -29,4 +29,6 @@ db.centBankDetails= require('./cent_bank_details')(sequelize, Sequelize,DataType
 db.centVerification= require('./cent_verification')(sequelize, Sequelize,DataTypes);
 db.centLoanDoc= require('./cent_loan_doc')(sequelize, Sequelize,DataTypes);
 db.centLoanDetails= require('./cent_loan_detail')(sequelize, Sequelize,DataTypes);
+db.centDsaRoles= require('./cent_dsapro_roles')(sequelize, Sequelize,DataTypes);
+db.centDsaUserRoles= require('./cent_dsapro_user_roles')(sequelize, Sequelize,DataTypes);
 module.exports = db;
