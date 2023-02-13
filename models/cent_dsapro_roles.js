@@ -15,6 +15,13 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
         comment: "Unique role name.",
         unique: "name",
       },
+      role_key: {
+        type: DataTypes.STRING(64),
+        allowNull: false,
+        defaultValue: "",
+        comment: "Unique role name.",
+        unique: "name",
+      },
       isActive: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false
