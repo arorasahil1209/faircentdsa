@@ -31,4 +31,6 @@ db.centLoanDoc= require('./cent_loan_doc')(sequelize, Sequelize,DataTypes);
 db.centLoanDetails= require('./cent_loan_detail')(sequelize, Sequelize,DataTypes);
 db.centDsaRoles= require('./cent_dsapro_roles')(sequelize, Sequelize,DataTypes);
 db.centDsaUserRoles= require('./cent_dsapro_user_roles')(sequelize, Sequelize,DataTypes);
+db.centDsaPermission= require('./cent_dsapro_permission')(sequelize, Sequelize,DataTypes);
+db.centDsaPermissionRole= require('./cent_dsapro_permission_role')(sequelize, Sequelize,DataTypes);
 module.exports = db;

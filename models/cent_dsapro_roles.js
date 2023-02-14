@@ -19,8 +19,8 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
         type: DataTypes.STRING(64),
         allowNull: false,
         defaultValue: "",
-        comment: "Unique role name.",
-        unique: "name",
+        comment: "Unique role key.",
+        unique: "role_key",
       },
       isActive: {
         type: DataTypes.INTEGER.UNSIGNED,

@@ -12,6 +12,7 @@ let leads = require('./routes/leadRoutes');
 let cnd = require('./routes/cndRoutes');
 let faircent = require('./routes/faircentRoutes');
 let userManagement = require('./routes/userManagementRoutes');
+let permissionManagement = require('./routes/permissionManagement');
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
 app.use(cors())
@@ -21,6 +22,7 @@ app.use('/v0',leads);
 app.use('/v0',cnd);
 app.use('/v0',faircent);
 app.use('/v0',userManagement);
+app.use('/v0',permissionManagement);
 /* connect with db now */
 db.sequelize.sync({force:false})
     .then(() => {
