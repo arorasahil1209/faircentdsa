@@ -284,7 +284,7 @@ const createDsaRoles = async (req, res) => {
   try {
     let role = await centDsaRoles.create({
       name: req.body.name,
-      role_key:req.body.role_key.split(' ').join('_').toUpperCase(),
+      role_key:req.body.name.split(' ').join('_').toUpperCase(),
       isActive:1
     });
     return res.json({
