@@ -64,7 +64,8 @@ const createCentUser = async (body) => {
 const listUser = async (req, res) => {
   try {
     let users = await db.sequelize.query(
-      `select  ur.uid, ur.isActive,r.name,cu.fname, cu.lname,cu.mobile,u.mail from cent_dsapro_user_roles ur
+      `select  ur.uid, ur.isActive,r.name,cu.fname, cu.lname,cu.mobile,u.mail,r.name,r.role_key
+      from cent_dsapro_user_roles ur
       join cent_dsapro_roles r on r.id = ur.rid
       join cent_user cu on cu.uid = ur.uid
       join users u on u.uid =ur.uid
