@@ -322,6 +322,7 @@ const updateDsaRoles = async (req, res) => {
       let role = await centDsaRoles.update(
         {
           name: req.body.name,
+          role_key:req.body.rolekey,
           isActive: req.body.isActive,
         },
         {
